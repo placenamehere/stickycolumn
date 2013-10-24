@@ -1,0 +1,15 @@
+; EditorConfig info: http://EditorConfig.org
+; Install EditorConfig Sublime Text Package via Package Control
+; https://github.com/sindresorhus/editorconfig-sublime#readme
+
+; top-most EditorConfig file
+root = true
+
+; behavior for all page types
+[*]
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true

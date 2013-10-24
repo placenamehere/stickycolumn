@@ -1,0 +1,27 @@
+{
+  "name": "stickycolumn",
+  "title": "jQuery Stickycolumn",
+  "description": "A jQuery plugin to do something like position sticky, with constraints",
+  "keywords": [
+    "jquery",
+    "accordion",
+    "plugins"
+  ],
+  "version": "0.5",
+  "author": {
+    "name": "Chris Casciano",
+    "email": "chris@placenamehere.com",
+    "url": "https://github.com/placenamehere"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://zenorocha.mit-license.org/"
+    }
+  ],
+  "bugs": "https://github.com/placenamehere/simpleaccordion/issues",
+  "homepage": "https://github.com/placenamehere/simpleaccordion",
+  "dependencies": {
+    "jquery": ">=1.4"
+  }
+}
