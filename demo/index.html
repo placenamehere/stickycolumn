@@ -1,17 +1,59 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>jQuery Boilerplate</title>
+		<title>jQuery Stickycolumn</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-		<script src="../dist/jquery.boilerplate.js"></script>
+		<script src="../dist/jquery.stickycolumn.js"></script>
+    <link rel="stylesheet" src="../dist/jquery.sitckycolumn.css">
+
+    <style>
+      header,
+      footer {
+        border: 1px dashed black;
+      }
+      main {
+        border: 1px dashed blue;
+        overflow: auto;
+      }
+
+      #content {
+        border: 1px dashed green;
+        width: 70%;
+        float: left;
+      }
+      #column {
+        margin-left: 75%;
+        border: 1px dashed pink;
+      }
+    </style>
 	</head>
 	<body>
 		<script>
 			$(function() {
-				$("#element").defaultPluginName({
-					propertyName: "a custom value"
-				});
+				$("#column").stickycolumn({});
 			});
 		</script>
+
+    <header>
+      Header
+    </header>
+    <main>
+      <div id="content">
+        Content Body
+        <img src="http://placekitten.com/600/400" width="100%">
+        <img src="http://placekitten.com/600/400" width="100%">
+        <img src="http://placekitten.com/600/400" width="100%">
+        <img src="http://placekitten.com/600/400" width="100%">
+      </div>
+
+      <div id="column">
+        Column Content
+        <img src="http://placekitten.com/200/300" width="100%">
+      </div>
+    </main>
+    <footer>
+      Footer
+    </footer>
+
 	</body>
 </html>

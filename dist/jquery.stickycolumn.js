@@ -36,6 +36,7 @@
       this.options = $.extend( {}, defaults, options );
       this._defaults = defaults;
       this._name = pluginName;
+      this.resize_event;
       this.init();
     }
 
@@ -100,7 +101,7 @@
 
 
             // watch scroll events and reposition
-            $(window).on("scroll",function() {
+            $(window).on("scroll.stickycolumn",function() {
               scrollTop = window.pageYOffset || document.documentElement.scrollTop;
               if (scrollTop < start) {
                 // adjust by scrolltop
@@ -115,7 +116,7 @@
 
 
             // watch resize events and reset - f DRY
-            $(window).on("resize",function() {
+            $(window).on("resize.stickycolumn",function() {
               // initial maths
 
               elH = $el.height();
@@ -156,6 +157,25 @@
             });
 
 
+        },
+        destroy: function() {
+            var _this = this,
+                $el = $(_this.element);
+
+            // unbind events
+            $(window).off("scroll.stickycolumn");
+            $(window).off("resize.stickycolumn");
+
+            // remove classes / reset css
+            $el.animate({ top: 0, left: 0 },function() {
+              $el.removeClass(_this.options.prefix+"-active");
+            });
+
+
+            // remove data
+            $el.removeData(_this.options.prefix+"OffsetLeftStart")
+                .removeData(_this.options.prefix+"OffsetTopStart")
+                .removeData("plugin_"+_this._name);
         }
     };
 
