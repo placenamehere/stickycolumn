@@ -1,5 +1,5 @@
 /*
- *  jQuery Stickycolumn - v0.5
+ *  jQuery Stickycolumn - v0.6
  *  A jQuery plugin to do something like position sticky, with constraints
  *  https://github.com/placenamehere/simpleaccordion
  *
@@ -37,6 +37,9 @@
       this._defaults = defaults;
       this._name = pluginName;
       this.resize_event;
+      this.getContentPadding = function() {
+        return (typeof this.options.contentPadding === "function") ? this.options.contentPadding.call() : this.options.contentPadding;
+      };
       this.init();
     }
 
@@ -74,7 +77,7 @@
 
 
             // bottom of sticky item should match bottom of container
-            end = ($parent.height() + $parent.offset().top) - elH - start - _this.options.contentPadding;
+            end = ($parent.height() + $parent.offset().top) - elH - start - _this.getContentPadding();
 
             // set current styles accordingly
             if (winH < safeH) {
@@ -131,7 +134,7 @@
 
 
               // bottom of sticky item should match bottom of container
-              end = ($parent.height() + $parent.offset().top) - elH - start;
+              end = ($parent.height() + $parent.offset().top) - elH - start - _this.getContentPadding();
 
               // set current styles accordingly
               if (winH < safeH) {
