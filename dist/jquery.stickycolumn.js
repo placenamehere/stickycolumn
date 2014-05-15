@@ -23,6 +23,7 @@
     var pluginName = "stickycolumn",
         defaults = {
           contentPadding: 0,
+          start: 0,
           prefix: "sc"
         };
 
@@ -60,7 +61,6 @@
                 offsetLeftStart,
                 offsetTopStart,
                 safeH,
-                start = 46,
                 end = 500,
                 scrollTop;
 
@@ -77,7 +77,7 @@
 
 
             // bottom of sticky item should match bottom of container
-            end = ($parent.height() + $parent.offset().top) - elH - start - _this.getContentPadding();
+            end = ($parent.height() + $parent.offset().top) - elH - _this.options.start - _this.getContentPadding();
 
             // set current styles accordingly
             if (winH < safeH) {
@@ -88,14 +88,14 @@
             } else {
               $el.css("left",offsetLeftStart);
 
-              if (scrollTop < start) {
+              if (scrollTop < _this.options.start) {
                 // adjust by scrolltop
                 $el.css("top",offsetTopStart - scrollTop);
               } else if (scrollTop > end) {
                 // adjust
-                $el.css("top",(offsetTopStart + end) - scrollTop);
+                $el.css("top",(offsetTopStart + end) - scrollTop - _this.options.start);
               } else {
-                $el.css("top",offsetTopStart - start);
+                $el.css("top",offsetTopStart - _this.options.start);
               }
 
               $el.addClass(_this.options.prefix+"-active");
@@ -106,14 +106,15 @@
             // watch scroll events and reposition
             $(window).on("scroll.stickycolumn",function() {
               scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-              if (scrollTop < start) {
+              if (scrollTop < _this.options.start) {
                 // adjust by scrolltop
                 $el.css("top",offsetTopStart - scrollTop);
               } else if (scrollTop > end) {
                 // adjust
-                $el.css("top",(offsetTopStart + end) - scrollTop);
+                $el.css("top",(offsetTopStart + end) - scrollTop - _this.options.start);
               } else {
-                $el.css("top",offsetTopStart - start);
+                $el.css("top",offsetTopStart - _this.options.start);
+                // console.log(offsetTopStart - _this.options.start);
               }
             });
 
@@ -134,7 +135,7 @@
 
 
               // bottom of sticky item should match bottom of container
-              end = ($parent.height() + $parent.offset().top) - elH - start - _this.getContentPadding();
+              end = ($parent.height() + $parent.offset().top) - elH - _this.options.start - _this.getContentPadding();
 
               // set current styles accordingly
               if (winH < safeH) {
@@ -145,14 +146,14 @@
               } else {
                 $el.css("left",offsetLeftStart);
 
-                if (scrollTop < start) {
+                if (scrollTop < _this.options.start) {
                   // adjust by scrolltop
                   $el.css("top",offsetTopStart - scrollTop);
                 } else if (scrollTop > end) {
                   // adjust
-                  $el.css("top",(offsetTopStart + end) - scrollTop);
+                  $el.css("top",(offsetTopStart + end) - scrollTop - _this.options.start);
                 } else {
-                  $el.css("top",offsetTopStart - start);
+                  $el.css("top",offsetTopStart - _this.options.start);
                 }
 
                 $el.addClass(_this.options.prefix+"-active");
