@@ -4,7 +4,7 @@
   "description": "A jQuery plugin to do something like position sticky, with constraints",
   "author": "Chris Casciano",
   "homepage": "https://github.com/placenamehere/stickycolumn",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.7",
