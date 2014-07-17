@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>jQuery Stickycolumn</title>
+  <head>
+    <title>jQuery Stickycolumn</title>
     <script src="jquery.js"></script>
-		<script src="../dist/jquery.stickycolumn.js"></script>
+    <script src="../dist/jquery.stickycolumn.js"></script>
     <link rel="stylesheet" href="../dist/jquery.stickycolumn.css">
 
     <style>
@@ -39,14 +39,14 @@
 
       #content {
         outline: 1px dashed green;
-        width: 70%;
+        width: 50%;
         float: left;
 
       }
 
       #column {
-        margin-left: 75%;
-        width: 25%;
+        margin-left: 60%;
+        width: 40%;
         outline: 1px dashed pink;
 
       }
@@ -57,9 +57,21 @@
         height: auto;
       }
 
-
       /* END OF BASIC 2 COL FLOAT LAYOUT*/
 
+
+      /* add in media queries for this demo */
+
+      @media only screen and (min-width: 30em) {
+        #content {
+          width: 70%;
+        }
+
+        #column {
+          margin-left: 75%;
+          width: 25%;
+        }
+      }
 
       /* CUSTOMIZE STICKY COLUMNS CSS */
       .sc-active {
@@ -68,20 +80,27 @@
       }
 
       .sc-fixedcontainer .sc-active {
-        left: 75%;
+        left: 60%;
+      }
+
+      /* add in media queries for demo */
+      @media only screen and (min-width: 30em) {
+        .sc-fixedcontainer .sc-active {
+          left: 75%;
+        }
       }
       /* END CUSTOMIZE STICKY COLUMNS CSS */
     </style>
-	</head>
-	<body>
-		<script>
-			$(function() {
-				$("#column").stickycolumn({
+  </head>
+  <body>
+    <script>
+      $(function() {
+        $("#column").stickycolumn({
           viewportTop: 30, // match sticky element's top
           containerBottom: 40 // match sticky element's margin-bottom
         });
-			});
-		</script>
+      });
+    </script>
 
     <header>
       Header
@@ -106,5 +125,5 @@
       Footer
     </footer>
 
-	</body>
+  </body>
 </html>
