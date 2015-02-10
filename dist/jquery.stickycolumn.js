@@ -1,11 +1,33 @@
 /*
- *  jQuery Stickycolumn - v0.8
+ *  jQuery Stickycolumn - v0.9
  *  A jQuery plugin to do something like position sticky, with constraints
  *  https://github.com/placenamehere/stickycolumn
  *
  *  Made by Chris Casciano
  *  Under MIT License
  */
+// search for scroll parent, from jqueryUI
+// https://github.com/jquery/jquery-ui/blob/9d0f44fd7b16a66de1d9b0d8c5e4ab954d83790f/ui/core.js#L55
+;(function($) {
+  $.fn.extend({
+    scrollParent: function( includeHidden ) {
+      var position = this.css( "position" ),
+        excludeStaticParent = position === "absolute",
+        overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/,
+        scrollParent = this.parents().filter( function() {
+          var parent = $( this );
+          if ( excludeStaticParent && parent.css( "position" ) === "static" ) {
+            return false;
+          }
+          return overflowRegex.test( parent.css( "overflow" ) + parent.css( "overflow-y" ) + parent.css( "overflow-x" ) );
+        }).eq( 0 );
+
+      return position === "fixed" || !scrollParent.length ? $( this[ 0 ].ownerDocument || document ) : scrollParent;
+    }
+  });
+})(jQuery);
+
+// sticky column plugin
 ;(function ( $, window, document, undefined ) {
 
     // Create the defaults once
@@ -13,7 +35,7 @@
         defaults = {
           contentPadding: 0,
           viewportTop: 0,
-          containerBottom: 0,
+          containerBottom: 0, // TODO: need?
           prefix: "sc"
         };
 
@@ -27,29 +49,40 @@
       this.useSticky = true;
       this.resize_event;
       this.doMaths = function($el) {
-        var $parent = $el.parent(),
+        var $scrollParent = $el.scrollParent(),
+            $parent = $el.parent(),
             maths = {
-              offsetTopStart: 0,
-              safeH: 9,
+              parentStart: 0,
+              parentEnd: 0,
+              safeH: 0,
               start: 0,
               end: 0
             };
 
-        maths.offsetTopStart = $parent.offset().top;
-        maths.safeH = $el.height() + maths.offsetTopStart;
-        maths.start = maths.offsetTopStart - this.getViewportTop();
-        maths.end = ($parent.height() + $parent.offset().top) - $el.height() - this.getViewportTop() - this.getContainerBottom() - this.getContentPadding();
+        // start of $parent measured from top of $scrollParent
+        maths.parentStart = $parent.offset().top + $scrollParent.scrollTop() - (typeof $scrollParent.offset() !== "undefined" ? $scrollParent.offset().top : 0);
+        // end of $parent measured from top of $scrollParent
+        maths.parentEnd = maths.parentStart + $parent.height();
+        // room needed to fit the content + top spacing
+        maths.safeH = this.getContentHeight($el) + this.getViewportTop();
+
+        // starting sticky @ calculated scrollTop of $scrollParent
+        maths.start = maths.parentStart - this.getViewportTop();
+        // ending sticky @ calculated scrollTop of $scrollParent
+        maths.end = maths.parentEnd - this.getContentHeight($el) - this.getViewportTop();
 
         return maths;
       };
       this.updatePosition = function($el,maths) {
-        var winH = $(window).height(),
-            scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var $scrollParent = $el.scrollParent(),
+            scrollParentScrollTop = $scrollParent.scrollTop();
 
-        if (winH < maths.safeH) {
+
+        if ($scrollParent.height() < maths.safeH) {
+          // we're not safe at this time, don't position
 
           if (!this.useSticky) {
-            $el.css("top",0); // TODO: auto? better recover?
+            $el.css("top",0); // Q: better way to recover from mid positioning to original?
           }
 
           $el.removeClass(this.options.prefix+"-active");
@@ -58,14 +91,15 @@
 
           if (!this.useSticky) {
 
-            if (scrollTop < maths.start) {
-              // adjust by scrolltop
-              $el.css("top",maths.offsetTopStart - scrollTop);
-            } else if (scrollTop > maths.end) {
-              // adjust
-              $el.css("top",(maths.offsetTopStart + maths.end) - scrollTop - maths.start);
+            if (scrollParentScrollTop < maths.start) {
+              // not hit that sticky threshold, so position to match scroll position
+              $el.css("top",0);
+            } else if (scrollParentScrollTop > maths.end) {
+              // adjust to whatever makes end at end of parent
+              $el.css("top",maths.end-maths.start);
             } else {
-              $el.css("top",maths.offsetTopStart - maths.start);
+              // adjust to whatever makes it right at viewport top
+              $el.css("top",scrollParentScrollTop - maths.start);
             }
 
           }
@@ -74,6 +108,9 @@
 
         }
 
+      };
+      this.getContentHeight = function($el) {
+        return $el.height() + this.getContentPadding();
       };
       this.getContentPadding = function() {
         return (typeof this.options.contentPadding === "function") ? this.options.contentPadding.call() : this.options.contentPadding;
@@ -92,6 +129,7 @@
           var _this = this,
               $supportTest,
               $el = $(_this.element),
+              $scrollParent = $el.scrollParent(),
               maths;
 
           if (!_this.initialized) {
@@ -118,7 +156,7 @@
 
             // watch scroll events and reposition
             if (!_this.useSticky) {
-              $(window).on("scroll.stickycolumn",function() {
+              $($scrollParent).on("scroll.stickycolumn",function() {
                 maths = _this.doMaths($el);
                 _this.updatePosition($el,maths);
               });

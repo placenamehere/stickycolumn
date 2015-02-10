@@ -3,13 +3,10 @@
 .sc-active {
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
-  margin-bottom: 0; }
+  top: 0; }
 
 .sc-fixedcontainer {
   position: relative; }
   .sc-fixedcontainer .sc-active {
-    position: fixed;
-    left: 75%;
-    margin-left: 0 !important;
-    margin-right: 0 !important; }
+    position: relative;
+    left: 0; }

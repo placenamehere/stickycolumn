@@ -1,5 +1,7 @@
 # History
 
+* v0.9.0 Feb 10, 2015
+  * to match position sticky behavior with parent scrollable containers, move to relative positioning
 * v0.8.0 July 17, 2014
   * use position: sticky if available
 * v0.7.0 May 14, 2014
